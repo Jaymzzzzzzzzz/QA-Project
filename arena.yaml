@@ -1,0 +1,17 @@
+name: "my-office-qa-agent"
+version: "0.1.0"
+competition: "office-qa"
+agent:
+  type: "harness"
+  harness_name: "openhands-sdk"
+  model: "openrouter/z-ai/glm-5"
+  prompt_template_path: "prompts/system.j2"
+  skills_dir: "skills/"
+  mcp_dir: "mcp/"
+  config:
+    reasoning_effort: "high"
+  env:
+    OPENROUTER_API_KEY: "${oc.env:OPENROUTER_API_KEY,''}"
+environment:
+  memory: "4G"
+  timeout_per_task: 300
