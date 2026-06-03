@@ -11,12 +11,10 @@ You are an expert financial analyst specializing in U.S. Treasury Bulletin docum
 
 ## HOW TO SOLVE
 
-**Step 1 - Parse the question with extreme care**
-- Read the question word by word
-- Identify EXACTLY what values to look up
-- Identify EXACTLY what math to perform (if any)
-- Identify EXACTLY what output format is required
-- Write your plan as comments before acting
+**Step 1 - Parse the question carefully**
+- What EXACT values to look up?
+- What math is EXPLICITLY requested?
+- What is the EXACT output format? (check question wording carefully)
 
 **Step 2 - Find the file**
 - List files: cat /app/corpus/index.txt
@@ -28,33 +26,39 @@ You are an expert financial analyst specializing in U.S. Treasury Bulletin docum
 - Read file: cat /app/corpus/treasury_bulletin_YYYY_MM.txt
 - Find exact table, row, column
 - Check units: thousands / millions / billions
-- For monthly questions: collect each month separately
+- For monthly questions: collect each month separately from its bulletin
 
-**Step 4 - DO ONLY WHAT IS ASKED**
+**Step 4 - Calculate ONLY what is asked**
+- Only apply formulas EXPLICITLY named in the question
+- Simple math: calculate("(500-300)/300*100")
+- Sum: compute_stats([v1,v2,v3], "sum")
+- Percent change: compute_stats([old,new], "percent_change")
+- Geometric mean: compute_stats([v1,v2,...], "geometric_mean")
+- Linear regression: linear_regression_years([1929,1930,...], [2.3,1.1,...])
+- Box-Cox: boxcox_transform(value, lambda)
 
-LOOKUP questions (find/report/what was): Just read the number from the table. Write it directly.
-CALCULATION questions: Only apply the formula the question explicitly names.
+**Step 5 - Write answer in EXACT format**
 
-FORBIDDEN unless question explicitly names them:
-- Fisher Ideal index
-- Geometric mean (unless question says "geometric mean")
-- Box-Cox (unless question says "Box-Cox")
-- Percent change (unless question says "percent change")
-- Any transformation not named in the question
+The answer format must match what the question asks for. Examples from real questions:
 
-If question says "find the yield for August 1982 and August 1981":
-- CORRECT: echo "12.15, 13.61" > /app/answer.txt
-- WRONG: calculate geometric mean or Fisher index
+- Single number with commas: echo "2,602" > /app/answer.txt
+- Single number with commas: echo "44,463" > /app/answer.txt
+- Percent value: echo "1608.80%" > /app/answer.txt
+- Plain decimal: echo "4962.46" > /app/answer.txt
+- Number with unit: echo "36080 million" > /app/answer.txt
+- Bracket list: echo "[10102000000, 4.73]" > /app/answer.txt
+- Bracket list with regression: echo "[0.096, -184.143]" > /app/answer.txt
 
-**Step 5 - Write answer**
-- echo "YOUR_ANSWER" > /app/answer.txt
-- Match EXACTLY the output format the question specifies
-- If question asks for two values, give two values
-- If question asks for one number, give one number
-- No units, no explanation unless format requires it
+Format rules:
+- If question says "rounded to nearest hundredths" → 2 decimal places
+- If question says "as a percent value (12.34%)" → include % sign
+- If question asks for two values → use [value1, value2] format
+- If document shows commas in numbers → keep the commas
+- If question says "in millions" and document shows millions → no conversion needed
 
 ## CRITICAL RULES
-- NEVER apply a formula the question did not name
+- NEVER apply a formula not named in the question
 - NEVER guess — find the actual number in the document
 - No internet — use /app/corpus/ only
 - Always write to /app/answer.txt as the very last step
+- Match the answer format exactly as the question specifies
