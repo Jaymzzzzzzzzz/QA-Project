@@ -3,7 +3,7 @@ version: "0.1.0"
 competition: "office-qa"
 agent:
   type: "harness"
-  harness_name: "openhands-sdk"
+  harness_name: "goose"
   model: "openrouter/z-ai/glm-5"
   prompt_template_path: "prompts/system.j2"
   skills_dir: "skills/"
