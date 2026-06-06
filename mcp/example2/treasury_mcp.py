@@ -113,8 +113,10 @@ def calculate(expression: str) -> str:
     """
     try:
         cleaned = expression.replace(",", "")
-        if re.match(r"^[\d\s\+\-\*\/\(\)\.\%]+$", cleaned):
-            result = eval(cleaned)
+        allowed = re.match(r"^[\d\s\+\-\*\/\(\)\.\%]+$", cleaned)
+        has_abs = "abs(" in expression and re.match(r"^[\d\s\+\-\*\/\(\)\.\%abs]+$", cleaned)
+        if allowed or has_abs:
+            result = eval(cleaned, {"__builtins__": {}}, {"abs": abs, "round": round, "pow": pow})
             return str(round(result, 6))
         return "Error: unsafe characters in expression"
     except Exception as e:
